@@ -1,0 +1,9 @@
+@font-face {
+font-family: "Monospace";
+  src: url('./fonts/Monospace.ttf');
+}
+
+@font-face {
+font-family: "Fira Mono Regular";
+  src: url('./fonts/FiraMono-Regular.ttf');
+}
