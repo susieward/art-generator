@@ -45,17 +45,17 @@ export default {
 
       this.fillBgColor(c, ctx);
 
-      let randomNum = Math.floor((Math.random() * 1) + 100);
+      let randomNum = Math.floor((Math.random() * 1) + 50);
       let interval = setInterval(() => this.draw(c, ctx), randomNum);
 
       setTimeout(() => {
         clearInterval(interval);
-      }, 3000);
+      }, 1000);
     },
 
     saveBgColor: function(){
-      if(this.currentBgColor !== null){
-        this.bgColors.push(this.currentBgColor);
+      if(this.currentBgHex !== null){
+        this.bgColors.push(this.currentBgHex);
       }
     },
 
@@ -65,18 +65,21 @@ export default {
       let canvasHeight = c.height;
       let randomX = Math.random()*canvasWidth;
       let randomY = Math.random()*canvasHeight;
-      let randomColor = this.getRandomColor();
 
-      let random1 = Math.floor((Math.random() * 5) + 1);
+      let random1 = Math.floor((Math.random() * 500) + 1);
       let random2 = Math.floor((Math.random() * 4) + 1);
-      let randomLineWidth = ((Math.random() * 7));
+      let randomLineWidth = ((Math.random() * 3));
+      let randomHsl = 'hsl('+ 360*Math.random() +',100%,50%)';
 
       let randomShade = this.shades[Math.floor(Math.random()*this.shades.length)];
-
+      let points = [];
+console.log(randomLineWidth)
       ctx.beginPath();
-      ctx.strokeStyle = randomShade;
+      ctx.shadowBlur = 10;
+ ctx.shadowColor = 'rgb(0, 0, 0)';
+      ctx.strokeStyle = randomHsl;
 		  ctx.lineWidth = randomLineWidth;
-		  ctx.moveTo(canvasWidth/random1, canvasHeight/random2);
+		  ctx.moveTo(canvasWidth/2, random1);
 		  ctx.lineTo(randomX,randomY);
 		  ctx.stroke();
     },
@@ -131,7 +134,7 @@ export default {
 
     let randomShade = shades[Math.floor(Math.random()*shades.length)];
     this.shades = shades;
-      console.log(shades);
+    //  console.log(shades);
 
       console.log('bgColor', bgColor);
 
@@ -164,6 +167,18 @@ export default {
         ].join()+")";
       return color
     },
+
+  generateHslaColors: function(saturation, lightness, amount) {
+    let colors = []
+    let huedelta = Math.trunc(360 / amount)
+
+    for (let i = 0; i < amount; i++) {
+      let hue = i * huedelta
+      colors.push(`hsl(${hue},${saturation}%,${lightness}%)`)
+    }
+
+  return colors
+},
 
     getRandomColor: function(){
 
