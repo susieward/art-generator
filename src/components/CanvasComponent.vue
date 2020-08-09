@@ -2,7 +2,9 @@
   <div>
 <canvas @click="generateCanvas" id="canvas" ref="canvas" width="800" height="550"></canvas>
 <p>
-  {{ bgColors }}
+<span v-for="color in bgColors">
+  <a :href="colorUrl(color)" target="_blank">{{ color }}</a>,
+</span>
 </p>
 <p>
   {{ currentBgColor }}
@@ -36,21 +38,28 @@ export default {
 
   computed: {
 
-  },
+},
 
   methods: {
+
+    colorUrl: function(color){
+      let c = color.substr(1);
+      return `https://www.color-hex.com/color/${c}`;
+
+    },
+
     generateCanvas: function(){
-      let c = this.$refs.canvas;
-      let ctx = c.getContext("2d");
+      const c = this.$refs.canvas;
+      const ctx = c.getContext("2d");
 
       this.fillBgColor(c, ctx);
 
       let randomNum = Math.floor((Math.random() * 1) + 50);
-      let interval = setInterval(() => this.draw(c, ctx), randomNum);
+      let interval = setInterval(() => this.drawRandomRects(c, ctx), randomNum);
 
       setTimeout(() => {
         clearInterval(interval);
-      }, 1000);
+      }, 2000);
     },
 
     saveBgColor: function(){
@@ -59,29 +68,93 @@ export default {
       }
     },
 
-    draw: function(c, ctx){
+    drawRandomRects: function(c, ctx){
 
-      let canvasWidth = c.width;
-      let canvasHeight = c.height;
+      const canvasWidth = c.width;
+      const canvasHeight = c.height;
       let randomX = Math.random()*canvasWidth;
       let randomY = Math.random()*canvasHeight;
 
       let random1 = Math.floor((Math.random() * 500) + 1);
       let random2 = Math.floor((Math.random() * 4) + 1);
-      let randomLineWidth = ((Math.random() * 3));
+      let randomLineWidth = ((Math.random() * 4));
       let randomHsl = 'hsl('+ 360*Math.random() +',100%,50%)';
 
-      let randomShade = this.shades[Math.floor(Math.random()*this.shades.length)];
-      let points = [];
-console.log(randomLineWidth)
+    for(let i=0; i < 1000; i++) {
       ctx.beginPath();
+      let x = Math.random() * canvasWidth;
+      let y = Math.random() * canvasHeight;
+      let width = Math.random() * canvasWidth;
+      let height = Math.random() * canvasHeight;
+      ctx.strokeStyle = randomHsl;
+      ctx.rect(x, y, width, height);
+    }
+    ctx.stroke();
+
+/*
+    //  let randomShade = this.shades[Math.floor(Math.random()*this.shades.length)];
+      let points = [];
+      console.log(randomLineWidth)
+      ctx.beginPath();
+      ctx.moveTo(randomX, randomY);
+    //ctx.lineTo(randomX, randomY);
+      ctx.bezierCurveTo(290, -40, 200, 200, 400, 100);
       ctx.shadowBlur = 10;
- ctx.shadowColor = 'rgb(0, 0, 0)';
+      ctx.shadowColor = 'rgb(0, 0, 0)';
+    // ctx.lineJoin = ctx.lineCap = 'round';
       ctx.strokeStyle = randomHsl;
 		  ctx.lineWidth = randomLineWidth;
-		  ctx.moveTo(canvasWidth/2, random1);
-		  ctx.lineTo(randomX,randomY);
+  //  ctx.arc(100, 75, 50, 0, Math.PI/2);
 		  ctx.stroke();
+*/
+    },
+
+    drawNeighborPoints: function(c, ctx){
+
+      const canvasWidth = c.width;
+      const canvasHeight = c.height;
+
+      let randomX = Math.random()*canvasWidth;
+      let randomY = Math.random()*canvasHeight;
+    let randomLineWidth = ((Math.random() * 2));
+    let randomHsl = 'hsl('+ 360*Math.random() +',100%,50%)';
+
+      let connectingX = 0;
+      let connectingY = 0;
+
+      for(let i=0; i < 1000; i++) {
+
+        let randomStartX = Math.random()*canvasWidth;
+        let randomStartY = Math.random()*canvasHeight;
+
+        let controlX = randomStartX - Math.random()*canvasWidth;
+        let controlY = randomStartY - Math.random()*canvasHeight;
+
+
+        let endX = Math.random()*canvasWidth;
+        let endY =  Math.random()*canvasHeight;
+
+        ctx.beginPath();
+        ctx.moveTo(randomStartX, randomStartY);
+        ctx.strokeStyle = randomHsl;
+        ctx.lineWidth = randomLineWidth;
+        ctx.bezierCurveTo((randomStartX * Math.random()), (randomStartY + Math.random()*canvasHeight), controlX, controlY, endX, endY);
+
+  ctx.moveTo(endX, endY);
+        ctx.strokeStyle = 'hsl('+ 360*Math.random() +',100%,50%)';
+  		  ctx.lineWidth = randomLineWidth;
+
+          ctx.bezierCurveTo((endX - Math.random()), (endY + Math.random()*canvasHeight), (Math.random()*canvasWidth/2), (Math.random()*canvasHeight/2), (Math.random()*canvasWidth), (Math.random()*canvasHeight/2));
+// ctx.moveTo(Math.random()/canvasWidth, Math.random()/canvasHeight);
+          ctx.strokeStyle = 'hsl('+ 360*Math.random() +',100%,50%)';
+    		  ctx.lineWidth = randomLineWidth;
+          ctx.bezierCurveTo((endX - Math.random()), (endY + Math.random()*canvasHeight), (Math.random()*canvasWidth/2), (Math.random()*canvasHeight/2), (Math.random()*canvasWidth*2), (Math.random()*canvasHeight/2));
+
+      }
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = 'rgb(0, 0, 0)';
+  ctx.stroke();
+//  this.drawRandomRects(c, ctx)
     },
 
     getMainColor: function(r, g, b){

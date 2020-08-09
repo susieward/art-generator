@@ -5,7 +5,10 @@
         <span class="title">a portrait of the artist as a young bot</span>
 
     </div>
+
+    <div class="content">
     <router-view/>
+  </div>
   </div>
 </template>
 
@@ -22,7 +25,13 @@
   color: #222;
 }
 #nav {
+  display: grid;
+  justify-content: center;
   padding: 30px 0;
+  position: fixed;
+  top: 0;
+  min-height: 100px;
+  margin-bottom: 100px;
   a {
     font-weight: bold;
     color: #2c3e50;
@@ -35,5 +44,10 @@
 .title {
   font-family: 'Fira Mono Regular';
   font-weight: 500;
+}
+
+
+.content {
+  margin-top: 200px;
 }
 </style>
