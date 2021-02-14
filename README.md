@@ -1,4 +1,5 @@
-# art-bot
+# canvas-art-generator
+Vue app that draws randomly-generated Bezier curves and rectangles onto an HTML5 canvas element. Drawings can be downloaded and saved as .png files.
 
 ## Project setup
 ```
